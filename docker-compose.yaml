@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  container_api_magia:
+    build:
+      context: .
+    volumes:
+      - .:/app
+    command: python3 -m swagger_server

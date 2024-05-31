@@ -1,0 +1,15 @@
+{
+    "create_db":{
+        "db_name": "MyMagicDB.db",
+        "table_name": "Solicitudes",
+        "fields":{
+            "nombre": "TEXT(20)",
+            "apellido": "TEXT(20)",
+            "identificacion": "TEXT",
+            "edad": "INTEGER(2)",
+            "afinidad": "TEXT",
+            "aceptado": "INTEGER(1)"
+        }
+    }
+    
+}

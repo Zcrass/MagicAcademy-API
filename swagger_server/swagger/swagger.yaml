@@ -1,0 +1,288 @@
+openapi: 3.0.3
+info:
+  title: Magic Academy
+  description: |-
+    This is an example API for the IA interactive tech test:
+    En el Reino del Trébol, el Rey Mago necesita un sistema para la academia de magia
+    que administre el registro de solicitud de estudiantes y la asignación aleatoria de
+    sus Grimorios. Los Grimorios se clasifican según el tipo de trébol en la portada, y
+    los estudiantes según sus afinidades mágicas específicas.
+  termsOfService: sguzmand
+  contact:
+    email: guzmandsalvador@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+servers:
+- url: /
+tags:
+- name: student
+  description: Estudiante de la academia de magia
+- name: solicitudes
+  description: solicitudes de estudiantes
+paths:
+  /solicitud:
+    post:
+      tags:
+      - student
+      summary: Envia una solicitud de ingreso
+      description: Envia una solicitud de ingreso
+      operationId: add_solicitud
+      requestBody:
+        description: Envia una solicitud de ingreso
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Student'
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Solicitud'
+        "400":
+          description: Invalid input
+        "422":
+          description: Validation exception
+      x-openapi-router-controller: swagger_server.controllers.student_controller
+  /solicitud/{id}:
+    put:
+      tags:
+      - student
+      summary: Actualiza la solicitud del estudiante ID
+      description: Actualiza la solicitud del estudiante ID
+      operationId: update_solicitud
+      parameters:
+      - name: id
+        in: path
+        description: ID del estudiante
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        description: Actualiza la solicitud del estudiante ID
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Student'
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Solicitud'
+        "400":
+          description: Invalid input
+        "422":
+          description: Validation exception
+      x-openapi-router-controller: swagger_server.controllers.student_controller
+    delete:
+      tags:
+      - student
+      summary: Borra la solicitud del estudiante ID
+      description: Borra la solicitud del estudiante ID
+      operationId: delete_student
+      parameters:
+      - name: id
+        in: path
+        description: ID del estudiante
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "400":
+          description: Invalid username supplied
+        "404":
+          description: User not found
+      x-openapi-router-controller: swagger_server.controllers.student_controller
+  /solicitud/{id}/estatus:
+    patch:
+      tags:
+      - solicitudes
+      summary: Revisa el estado de una solicitud
+      description: Revisa el estado de una solicitud
+      operationId: check_status_solicitud
+      parameters:
+      - name: id
+        in: path
+        description: ID del estudiante
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        description: Revisa el estado de una solicitud
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Solicitud'
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Solicitud'
+        "400":
+          description: Invalid input
+        "422":
+          description: Validation exception
+      x-openapi-router-controller: swagger_server.controllers.solicitudes_controller
+  /solicitudes:
+    get:
+      tags:
+      - solicitudes
+      summary: Lista las solicitudes
+      description: Lista las solicitudes
+      operationId: get_solicitudes
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Solicitud'
+                x-content-type: application/json
+        "400":
+          description: Invalid status value
+      x-openapi-router-controller: swagger_server.controllers.solicitudes_controller
+  /asignaciones:
+    get:
+      tags:
+      - solicitudes
+      summary: Lista las asignaciones
+      description: Lista las asignaciones
+      operationId: get_asignaciones
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Asignacion'
+                x-content-type: application/json
+        "400":
+          description: Invalid status value
+      x-openapi-router-controller: swagger_server.controllers.solicitudes_controller
+components:
+  schemas:
+    Student:
+      type: object
+      properties:
+        nombre:
+          type: string
+          example: Juan
+        apellido:
+          type: string
+          example: Perez
+        identificacion:
+          type: string
+          example: abc123
+        edad:
+          type: integer
+          format: int32
+          example: 18
+      example:
+        apellido: Perez
+        identificacion: abc123
+        nombre: Juan
+        edad: 18
+    Solicitud:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 9999
+        nombre:
+          type: string
+          example: Juan
+        apellido:
+          type: string
+          example: Perez
+        identificacion:
+          type: string
+          example: abc123
+        edad:
+          type: integer
+          format: int32
+          example: 18
+        afinidad:
+          type: string
+          example: luz
+        aceptado:
+          type: boolean
+          example: false
+      example:
+        afinidad: luz
+        aceptado: false
+        apellido: Perez
+        identificacion: abc123
+        id: 9999
+        nombre: Juan
+        edad: 18
+    Asignacion:
+      type: object
+      properties:
+        Oscuridad:
+          type: array
+          items:
+            $ref: '#/components/schemas/Student'
+        Luz:
+          type: array
+          items:
+            $ref: '#/components/schemas/Student'
+        Fuego:
+          type: array
+          items:
+            $ref: '#/components/schemas/Student'
+        Agua:
+          type: array
+          items:
+            $ref: '#/components/schemas/Student'
+        Viento:
+          type: array
+          items:
+            $ref: '#/components/schemas/Student'
+        Tierra:
+          type: array
+          items:
+            $ref: '#/components/schemas/Student'
+      example:
+        Luz:
+        - null
+        - null
+        Viento:
+        - null
+        - null
+        Oscuridad:
+        - apellido: Perez
+          identificacion: abc123
+          nombre: Juan
+          edad: 18
+        - apellido: Perez
+          identificacion: abc123
+          nombre: Juan
+          edad: 18
+        Agua:
+        - null
+        - null
+        Fuego:
+        - null
+        - null
+        Tierra:
+        - null
+        - null
+
